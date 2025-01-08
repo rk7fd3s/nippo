@@ -33,16 +33,16 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
             <div className="pe-1">
               {formated_start_time}～{formated_end_time}
             </div>
-            <div className="break-all">({article.time_optional})</div>
+            {article.time_optional && <div className="whitespace-break-spaces">({article.time_optional})</div>}
           </div>
         </div>
         <div className="flex">
           <div className="w-24 flex-none">研修内容</div>
-          <div className="grow break-all">{article.content}</div>
+          <div className="grow whitespace-break-spaces">{article.content}</div>
         </div>
         <div className="flex">
           <div className="w-24 flex-none">今日の感想</div>
-          <div className="grow break-all">{article.thoughts}</div>
+          <div className="grow whitespace-break-spaces">{article.thoughts}</div>
         </div>
       </article>
     </div>
