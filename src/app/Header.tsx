@@ -11,7 +11,7 @@ const Header = () => {
       </div>
       <div>
         <nav className="text-sm font-midium">
-          <Link href="/articles/new" className="bg-blue-400 hover:bg-blue-600 px-3 py-2 rounded-md">書く</Link>
+          <Link href="/new" className="bg-blue-400 hover:bg-blue-600 px-3 py-2 rounded-md">書く</Link>
         </nav>
       </div>
     </header>
