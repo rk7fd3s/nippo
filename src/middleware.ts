@@ -7,7 +7,7 @@ export const config = {
 export function middleware(req: NextRequest) {
   const isLocalDevelopment = process.env.NODE_ENV === 'development';
 
-  if (isLocalDevelopment || !process.env.BASIC_ID || !process.env.BASIC_PWD || req.nextUrl.pathname.startsWith('/api/')) {
+  if (isLocalDevelopment || !process.env.BASIC_ID || !process.env.BASIC_PWD || req.nextUrl.pathname.startsWith('/apis/')) {
     return NextResponse.next();
   }
 
