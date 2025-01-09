@@ -21,7 +21,7 @@ const CreateArticlePage = () => {
 
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-    await fetch(`${API_URL}/api/nippo`, {
+    await fetch(`${API_URL}/apis/nippo`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

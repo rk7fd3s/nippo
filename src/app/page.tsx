@@ -6,7 +6,7 @@ export default async function Home() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   try {
-    const res = await fetch(`${API_URL}/api/nippo`, { cache: "no-store" });
+    const res = await fetch(`${API_URL}/apis/nippo`, { cache: "no-store" });
     const articles = await res.json();
 
     return (
