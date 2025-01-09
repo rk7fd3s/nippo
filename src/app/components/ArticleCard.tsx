@@ -1,6 +1,6 @@
 import React from "react";
 import { Article } from "../types";
-import { format } from "date-fns";
+import { format, formatISO9075, formatDistanceToNowStrict, sub, isBefore  } from "date-fns";
 import { TZDate } from "@date-fns/tz";
 
 type ArticleCardProps = {
@@ -20,6 +20,8 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
     new TZDate("2000-01-01T" + article.end_time + "Z", "+00:00"),
     "HH:mm"
   );
+  const formated_created_at = formatISO9075(article.created_at);
+  const cuurent_date = new Date();
 
   return (
     <div>
@@ -43,6 +45,9 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
         <div className="flex">
           <div className="w-24 flex-none">今日の感想</div>
           <div className="grow whitespace-break-spaces">{article.thoughts}</div>
+        </div>
+        <div className="text-end">
+        Updated {isBefore(article.created_at, sub(cuurent_date, {days: 1})) ? formated_created_at : formatDistanceToNowStrict(article.created_at, {addSuffix: true})}
         </div>
       </article>
     </div>
