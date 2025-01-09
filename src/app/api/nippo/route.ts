@@ -1,4 +1,5 @@
-import { Article } from "@/app/types";
+import { ArticleDao } from "@/app/types";
+import { dao2Article } from "@/utils/objectConverter";
 import { supabase } from "@/utils/supabaseClient";
 import { NextResponse } from "next/server";
 
@@ -22,7 +23,11 @@ export async function GET(req: Request, res: Response) {
     return NextResponse.json(error);
   }
 
-  return NextResponse.json(data, { status: 200 });
+  try {
+    return NextResponse.json(data.map(dao => dao2Article(dao)), { status: 200 });
+  } catch (error) {
+    return NextResponse.json(error);
+  }
 }
 
 /**
@@ -32,7 +37,7 @@ export async function GET(req: Request, res: Response) {
  * @returns レスポンス
  */
 export async function POST(req: Request, res: Response) {
-  const item: Article = await req.json();
+  const item: ArticleDao = await req.json();
 
   // id, created_atを抜いたオブジェクトを生成
   const {id, created_at, ...reqBody} = item;
