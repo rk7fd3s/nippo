@@ -32,6 +32,7 @@ const CreateArticlePage = () => {
         thoughts,
         start_time,
         end_time,
+        time_optional,
       }),
     });
 
