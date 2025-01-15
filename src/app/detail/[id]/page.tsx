@@ -2,10 +2,7 @@ import Error from "@/app/error";
 import { Article } from "@/app/types";
 import {
   format,
-  formatDistanceToNowStrict,
-  formatISO9075,
-  isBefore,
-  sub,
+  formatISO9075
 } from "date-fns";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -13,8 +10,10 @@ import React from "react";
 const DetailArticlePage = async ({ params }: { params: { id: string } }) => {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+  const { id } = await params;
+
   try {
-    const res = await fetch(`${API_URL}/apis/nippo/${params.id}`, {
+    const res = await fetch(`${API_URL}/apis/nippo/${id}`, {
       next: { revalidate: 30 },
     });
 
