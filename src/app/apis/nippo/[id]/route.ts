@@ -1,20 +1,28 @@
-import { dao2Article } from "@/utils/objectConverter";
-import { supabase } from "@/utils/supabaseClient";
+import { getDetail } from "@/utils/microcms";
+import { cms2Article } from "@/utils/objectConverter";
 import { notFound } from "next/navigation";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request, res: Response) {
-  const id = req.url.split("/nippo/")[1];
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } },
+  res: Response
+) {
+  const { id } = await params;
 
   // supabaseからidにマッチしたデータ取得
-  const { data, error } = await supabase
-    .from("posts")
-    .select("*")
-    .eq("id", id)
-    .maybeSingle();
+  const { data, error } = await getDetail(id);
 
   if (error) {
-    return NextResponse.json(error, { status: 500 });
+    const match = error.toString().match(/status: (\d{3})/);
+    if (match) {
+      const status = match[1];
+      if (status !== "404") {
+        return NextResponse.json({ message: error.toString() }, { status });
+      }
+    } else {
+      return NextResponse.json({ message: error.toString() }, { status: 500 });
+    }
   }
 
   if (!data) {
@@ -22,7 +30,7 @@ export async function GET(req: Request, res: Response) {
   }
 
   try {
-    return NextResponse.json(dao2Article(data), { status: 200 });
+    return NextResponse.json(cms2Article(data), { status: 200 });
   } catch (error) {
     return NextResponse.json(error, { status: 500 });
   }

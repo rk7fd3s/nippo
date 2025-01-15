@@ -1,6 +1,5 @@
-import { ArticleDao } from "@/app/types";
-import { dao2Article } from "@/utils/objectConverter";
-import { supabase } from "@/utils/supabaseClient";
+import { getList, postDetail } from "@/utils/microcms";
+import { article2PostBody, cms2Article } from "@/utils/objectConverter";
 import { NextResponse } from "next/server";
 
 /**
@@ -10,11 +9,10 @@ import { NextResponse } from "next/server";
  * @returns レスポンス
  */
 export async function GET(req: Request, res: Response) {
-  // supabaseから登録降順に全データ取得
-  const { data, error } = await supabase
-    .from("posts")
-    .select("*")
-    .order("created_at", { ascending: false });
+  // 登録降順に全データ取得
+  const { data, error } = await getList({
+    orders: "-createdAt",
+  });
 
   if (error) {
     return NextResponse.json(error);
@@ -24,7 +22,10 @@ export async function GET(req: Request, res: Response) {
   }
 
   try {
-    return NextResponse.json(data.map(dao => dao2Article(dao)), { status: 200 });
+    return NextResponse.json(
+      data.map((dao) => cms2Article(dao)),
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json(error);
   }
@@ -37,20 +38,20 @@ export async function GET(req: Request, res: Response) {
  * @returns レスポンス
  */
 export async function POST(req: Request, res: Response) {
-  const item: ArticleDao = await req.json();
+  const item: any = await req.json();
+  const reqBody = article2PostBody(item);
 
-  // id, created_atを抜いたオブジェクトを生成
-  const {id, created_at, ...reqBody} = item;
-
-  // supabaseにデータ登録
-  const { data, error } = await supabase
-    .from("posts")
-    .insert([reqBody]);
+  const { id, error } = await postDetail(reqBody);
 
   if (error) {
-    return NextResponse.json(error);
+    const match = error.toString().match(/status: (\d{3})/);
+    if (match) {
+      const status = match[1];
+      return NextResponse.json({ message: error.toString() }, { status });
+    } else {
+      return NextResponse.json({ message: error.toString() }, { status: 500 });
+    }
   }
 
-  return NextResponse.json(data, { status: 201 });
+  return NextResponse.json(id, { status: 201 });
 }
-

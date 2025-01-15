@@ -1,4 +1,26 @@
 import { TZDate } from "@date-fns/tz";
+import { MicroCMSContentId, MicroCMSDate } from "microcms-js-sdk";
+
+
+export type ArticleCms = {
+    nippo_at: string;
+    content: string;
+    start_time: string;
+    end_time: string;
+    time_optional: string;
+    thoughts: string;
+} & MicroCMSContentId &
+MicroCMSDate;
+
+
+export type ArticlePostCms = {
+    nippo_at: string;
+    content: string;
+    start_time: string;
+    end_time: string;
+    time_optional: string;
+    thoughts: string;
+};
 
 export type ArticleDao = {
     id: number;
@@ -12,7 +34,7 @@ export type ArticleDao = {
 }
 
 export type Article = {
-    id: number;
+    id: string;
     nippo_at: TZDate; // date部分のみ使用
     content: string;
     start_time: TZDate; // time部分のみ使用
